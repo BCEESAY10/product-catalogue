@@ -20,81 +20,105 @@ const ProductCatalogue = () => {
   ];
 
   const categories = ['all', 'electronics', 'fashion', 'sports'];
+  const maxPrice = Math.max(...products.map(p => p.price));
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [priceRange, setPriceRange] = useState(maxPrice);
 
-  // Filter products based on search query and category
+  // Filter products based on search query price, and category
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesPrice = product.price <= priceRange;
+    return matchesSearch && matchesCategory && matchesPrice;
   });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className='px-4 w-full shadow-sm rounded-lg'>
-        <h1 className="text-xl md:text-3xl text-blue-500 text-center font-bold mb-4">FASHION AND SPORTS CENTER</h1>
-        <h3 className="text-lg md:text-xl text-center font-semibold mb-8">Offering Quality Fashions and Electronics for Sports Enthusiasts</h3>
-      </div>
-      
-      <div className="mb-8 space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+    <div className="min-h-screen bg-gray-50">
+    {/* Header Section */}
+    <div className="fixed top-0 left-0 right-0 bg-white shadow-md z-10">
+      <div className="container mx-auto px-4 py-4">
+        <h1 className="text-xl sm:text-3xl text-center text-blue-500 font-bold mb-4">FASHION, ELECTRONICS AND SPORTS STORE</h1>
         
-        <div className="flex-shrink-0">
-          <select
-            className="w-full md:w-48 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            {categories.map(category => (
-              <option key={category} value={category}>
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map(product => (
-          <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-48 object-contain"
+        <div className="space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Search products..."
+              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">D{product.price}</span>
-                <span className="text-sm text-gray-500 capitalize">{product.category}</span>
+          </div>
+          
+          <div className="flex space-x-4">
+            <select
+              className="w-36 sm:w-64 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </option>
+              ))}
+            </select>
+
+            <div className="flex-1 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Price Range: D0 - D{priceRange.toFixed(0)}</span>
               </div>
-              <button className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
-                Add to Cart
-              </button>
+              <input
+                type="range"
+                min="0"
+                max={maxPrice}
+                step="1"
+                value={priceRange}
+                onChange={(e) => setPriceRange(Number(e.target.value))}
+                className="w-full sm:w-64 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
             </div>
           </div>
-        ))}
+        </div>
       </div>
+    </div>
+      
+
+      
+       {/* Products Section */}
+       <div className="container mx-auto px-4 pt-[225px] sm:pt-[200px] pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map(product => (
+            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-48 object-contain"
+              />
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">${product.price}</span>
+                  <span className="text-sm text-gray-500 capitalize">{product.category}</span>
+                </div>
+                <button className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
 
       {filteredProducts.length === 0 && (
-        <div className="text-center text-gray-500 mt-8">
+        <div className="text-center font-medium text-gray-500 mt-8">
           No products found
         </div>
       )}
+      </div>
     </div>
   );
-};
+}
 
 export default ProductCatalogue;
