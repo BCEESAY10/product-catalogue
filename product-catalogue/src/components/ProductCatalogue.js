@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 
-export default ProductCatalogue = () => {
-  // Sample product data
+
+const ProductCatalogue = () => {
+ 
   const products = [
     { id: 1, name: 'Wireless Headphones', price: 99.99, category: 'electronics', image: '/api/placeholder/200/200' },
     { id: 2, name: 'Smart Watch', price: 199.99, category: 'electronics', image: '/api/placeholder/200/200' },
@@ -89,3 +90,4 @@ export default ProductCatalogue = () => {
   );
 };
 
+export default ProductCatalogue;

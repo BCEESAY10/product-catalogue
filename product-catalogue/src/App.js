@@ -1,4 +1,4 @@
-import ProductCatalogue from "./components/ProductCatalogue";
+import ProductCatalogue from './components/ProductCatalogue';
 
 function App() {
   return (
