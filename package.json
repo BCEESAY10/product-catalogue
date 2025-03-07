@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "lucide-react": "^0.469.0"
-  },
-  "devDependencies": {
-    "web-vitals": "^4.2.4"
-  }
-}
